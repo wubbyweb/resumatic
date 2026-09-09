@@ -1,17 +1,15 @@
 # Resumatic 🎯
 
-A multi-agent resume tailoring system powered by **LangGraph** and **FastAPI**.
+A multi-agent resume tailoring system powered by **LangGraph** and **FastAPI**, featuring an intuitive modern web frontend with drag-and-drop resume import.
 
-Upload your existing resume (PDF or DOCX) and a target job description — the AI pipeline
-extracts your resume content, tailors it to the job, and returns a professionally formatted
-PDF resume.
+Upload your existing resume (PDF or DOCX) and a target job description — the AI pipeline extracts your resume content, tailors it to the job, and returns a professionally formatted PDF resume.
 
 ---
 
 ## Architecture
 
 ```
-Frontend (any)
+Web Frontend (drag-and-drop UI)
      │
      │  POST /tailor-resume
      │  multipart/form-data
@@ -58,6 +56,8 @@ tailored_resume.pdf
 ```bash
 git clone <repo-url>
 cd resumatic
+python3 -m venv .venv
+source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
@@ -68,16 +68,80 @@ cp .env.example .env
 # Edit .env and add your API key:
 #   OPENAI_API_KEY=sk-...
 #   MODEL_NAME=gpt-4o-mini
+# Or for Google Gemini:
+#   GOOGLE_API_KEY=AIza...
+#   MODEL_NAME=gemini-2.0-flash
 ```
 
-### 3. Start the API server
+### 3. Start Frontend & Backend
+
+#### Method A: Using the Startup Script (`start.sh`)
+
+The included `start.sh` script automatically activates the virtual environment, checks configuration, and launches the services.
+
+```bash
+chmod +x start.sh
+./start.sh
+```
+
+By default, this launches:
+- **Frontend Web UI**: [http://localhost:3000](http://localhost:3000) (and [http://localhost:8000](http://localhost:8000))
+- **Backend API**: [http://localhost:8000](http://localhost:8000)
+- **Interactive Swagger Docs**: [http://localhost:8000/docs](http://localhost:8000/docs)
+- **Health Check**: [http://localhost:8000/health](http://localhost:8000/health)
+
+Press `Ctrl+C` at any time to cleanly stop both services.
+
+**Script flags:**
+```bash
+./start.sh              # Default: runs backend (:8000) & frontend (:3000)
+./start.sh --unified    # Unified mode: FastAPI serves both API & frontend (:8000)
+./start.sh --backend    # Runs backend API only (:8000)
+./start.sh --frontend   # Runs frontend web server only (:3000)
+./start.sh --help       # Display help menu
+```
+
+---
+
+#### Method B: Manual Commands
+
+##### 1. Unified Mode (FastAPI serves Backend + Frontend)
+Since FastAPI mounts the `frontend/` directory, you can run both frontend and backend on a single port:
 
 ```bash
 uvicorn main:app --reload --port 8000
 ```
+Open your browser at **[http://localhost:8000](http://localhost:8000)**.
 
-The API is now running at **http://localhost:8000**.
-Interactive Swagger docs: **http://localhost:8000/docs**
+##### 2. Separate Frontend and Backend
+If you prefer running frontend and backend in isolated terminal processes:
+
+- **Terminal 1 (Backend API):**
+  ```bash
+  uvicorn main:app --reload --port 8000
+  ```
+
+- **Terminal 2 (Frontend Static Server):**
+  ```bash
+  python3 -m http.server 3000 --directory frontend
+  ```
+  Then open **[http://localhost:3000](http://localhost:3000)** in your browser. (The frontend automatically routes API requests to `http://localhost:8000`).
+
+---
+
+## Web Frontend Features
+
+The frontend is completely isolated in the `frontend/` directory with zero build dependencies (vanilla HTML5, CSS3, and modern ES6 JavaScript):
+
+- **Drag-and-Drop Resume Upload**: Drag `.pdf` or `.docx` files directly into the drop zone with instant visual feedback and active state styling.
+- **Click-to-Browse**: Standard accessible file picker fallback.
+- **Client-Side Validation**: Immediate validation for file format and file size limits (max 10 MB).
+- **File Preview & Remove**: Displays filename, formatted size, and quick removal.
+- **Job Description Input**: Expandable textarea with live character counter.
+- **Multi-Stage Progress Indicator**: Visual step-by-step pipeline status (*Extracting* → *Enhancing* → *Generating PDF*).
+- **Automatic PDF Download**: Automatically triggers download of the tailored PDF upon completion, with a "Download Again" option.
+- **Error Feedback**: User-friendly alerts and "Try Again" recovery.
+- **Responsive Layout**: Designed for mobile, tablet, and desktop screens.
 
 ---
 
@@ -115,6 +179,7 @@ const response = await fetch('http://localhost:8000/tailor-resume', {
 
 const blob = await response.blob();
 const url = URL.createObjectURL(blob);
+
 // Trigger download
 const a = document.createElement('a');
 a.href = url;
@@ -135,19 +200,26 @@ curl http://localhost:8000/health
 
 ```
 resumatic/
-├── main.py              # FastAPI app — endpoints, CORS, file handling
-├── graph.py             # LangGraph StateGraph wiring
-├── state.py             # Shared state schema (ResumaticState TypedDict)
+├── start.sh              # Startup script for frontend and backend
+├── main.py               # FastAPI app — endpoints, CORS, static frontend mount
+├── graph.py              # LangGraph StateGraph wiring
+├── state.py              # Shared state schema (ResumaticState TypedDict)
+├── frontend/             # Dedicated isolated frontend directory
+│   ├── index.html        # Single-page web interface (semantic HTML)
+│   ├── css/
+│   │   └── styles.css    # Responsive styling, animations & theme
+│   └── js/
+│       └── app.js        # Drag-and-drop, API integration & state management
 ├── agents/
 │   ├── __init__.py
-│   ├── orchestrator.py  # Agent 1: Supervisor (LLM)
-│   ├── extractor.py     # Agent 2: Resume parser (no LLM)
-│   ├── enhancer.py      # Agent 3: Content tailor (LLM)
-│   └── pdf_generator.py # Agent 4: PDF builder (no LLM)
+│   ├── orchestrator.py   # Agent 1: Supervisor (LLM)
+│   ├── extractor.py      # Agent 2: Resume parser (no LLM)
+│   ├── enhancer.py       # Agent 3: Content tailor (LLM)
+│   └── pdf_generator.py  # Agent 4: PDF builder (no LLM)
 ├── sample/
-│   └── sample_jd.txt    # Sample job description for testing
-├── output/              # Generated PDFs (gitignored)
-├── uploads/             # Temp upload files (gitignored)
+│   └── sample_jd.txt     # Sample job description for testing
+├── output/               # Generated PDFs (gitignored)
+├── uploads/              # Temp upload files (gitignored)
 ├── requirements.txt
 ├── .env.example
 └── README.md

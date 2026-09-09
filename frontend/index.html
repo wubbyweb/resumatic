@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en" style="color-scheme: dark;">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="dark" />
+  <title>Resumatic — AI Resume Tailor</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎯</text></svg>" />
+</head>
+<body>
+
+  <!-- ===== Header ===== -->
+  <header class="header">
+    <div class="header__inner">
+      <div class="header__brand">
+        <span class="header__logo">🎯</span>
+        <h1 class="header__title">Resumatic</h1>
+      </div>
+      <p class="header__tagline">Tailor your resume to any job description — powered by AI</p>
+    </div>
+  </header>
+
+  <!-- ===== Main Content ===== -->
+  <main class="main">
+    <form id="tailorForm" class="form" novalidate>
+      <div class="form__grid">
+
+        <!-- Left Column: File Upload -->
+        <section class="card upload-section">
+          <h2 class="card__title">
+            <span class="card__icon">📄</span>
+            Upload Resume
+          </h2>
+          <p class="card__subtitle">Drag &amp; drop your resume or click to browse</p>
+
+          <div id="dropZone" class="drop-zone" tabindex="0" role="button" aria-label="Upload resume file. Drag and drop or click to browse.">
+            <input
+              type="file"
+              id="fileInput"
+              class="drop-zone__input"
+              accept=".pdf,.docx"
+              aria-hidden="true"
+            />
+            <div class="drop-zone__content">
+              <div class="drop-zone__icon" id="dropIcon">
+                <!-- Upload icon SVG -->
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="17 8 12 3 7 8" />
+                  <line x1="12" y1="3" x2="12" y2="15" />
+                </svg>
+              </div>
+              <p class="drop-zone__label" id="dropLabel">Drop your file here</p>
+              <p class="drop-zone__hint">PDF or DOCX — max 10 MB</p>
+            </div>
+          </div>
+
+          <!-- File preview (hidden until file selected) -->
+          <div id="filePreview" class="file-preview" hidden>
+            <div class="file-preview__info">
+              <span class="file-preview__icon">📎</span>
+              <div>
+                <p class="file-preview__name" id="fileName"></p>
+                <p class="file-preview__size" id="fileSize"></p>
+              </div>
+            </div>
+            <button type="button" id="removeFile" class="file-preview__remove" aria-label="Remove file">✕</button>
+          </div>
+
+          <p id="fileError" class="field-error" role="alert" hidden></p>
+        </section>
+
+        <!-- Right Column: Job Description -->
+        <section class="card jd-section">
+          <h2 class="card__title">
+            <span class="card__icon">💼</span>
+            Job Description
+          </h2>
+          <p class="card__subtitle">Paste the full job posting you're targeting</p>
+
+          <div class="textarea-wrapper">
+            <textarea
+              id="jobDescription"
+              class="textarea"
+              placeholder="Paste the job description here…"
+              rows="12"
+              required
+              aria-label="Job description text"
+            ></textarea>
+            <span class="textarea__count" id="charCount">0 characters</span>
+          </div>
+
+          <p id="jdError" class="field-error" role="alert" hidden></p>
+        </section>
+      </div>
+
+      <!-- Action Bar -->
+      <div class="action-bar">
+        <button type="submit" id="submitBtn" class="btn btn--primary" disabled>
+          <span class="btn__text">Tailor My Resume</span>
+          <span class="btn__icon">→</span>
+        </button>
+      </div>
+    </form>
+
+    <!-- ===== Progress / Results Area ===== -->
+    <section id="statusArea" class="status-area" hidden>
+
+      <!-- Processing State -->
+      <div id="processingState" class="status-card status-card--processing" hidden>
+        <div class="spinner"></div>
+        <h3 class="status-card__title">Tailoring your resume…</h3>
+        <div class="progress-steps">
+          <div class="progress-step" data-step="extract">
+            <div class="progress-step__dot"></div>
+            <span class="progress-step__label">Extracting</span>
+          </div>
+          <div class="progress-step__line"></div>
+          <div class="progress-step" data-step="enhance">
+            <div class="progress-step__dot"></div>
+            <span class="progress-step__label">Enhancing</span>
+          </div>
+          <div class="progress-step__line"></div>
+          <div class="progress-step" data-step="generate">
+            <div class="progress-step__dot"></div>
+            <span class="progress-step__label">Generating PDF</span>
+          </div>
+        </div>
+        <p class="status-card__hint">This may take up to a minute…</p>
+      </div>
+
+      <!-- Success State -->
+      <div id="successState" class="status-card status-card--success" hidden>
+        <div class="status-card__check">✓</div>
+        <h3 class="status-card__title">Your tailored resume is ready!</h3>
+        <p class="status-card__hint">Your download should start automatically.</p>
+        <div class="status-card__actions">
+          <button type="button" id="downloadAgain" class="btn btn--primary">
+            <span class="btn__text">Download Again</span>
+            <span class="btn__icon">↓</span>
+          </button>
+          <button type="button" id="startOver" class="btn btn--secondary">Start Over</button>
+        </div>
+      </div>
+
+      <!-- Error State -->
+      <div id="errorState" class="status-card status-card--error" hidden>
+        <div class="status-card__error-icon">!</div>
+        <h3 class="status-card__title">Something went wrong</h3>
+        <p class="status-card__message" id="errorMessage"></p>
+        <button type="button" id="tryAgain" class="btn btn--secondary">Try Again</button>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===== Footer ===== -->
+  <footer class="footer">
+    <p>Resumatic &mdash; Multi-agent resume tailoring powered by LangGraph</p>
+  </footer>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

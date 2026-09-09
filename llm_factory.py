@@ -45,9 +45,9 @@ def get_llm(agent: str, temperature: float = 0.0) -> ChatOpenAI:
         A configured ChatOpenAI instance pointing at OpenRouter.
 
     Raises:
-        EnvironmentError: If OPENROUTER_API_KEY is not set.
+        EnvironmentError: If OPENROUTER_API_KEY is not set or is invalid.
     """
-    api_key = os.getenv("OPENROUTER_API_KEY")
+    api_key = os.getenv("OPENROUTER_API_KEY", "").strip()
     if not api_key:
         raise EnvironmentError(
             "OPENROUTER_API_KEY is not set. "

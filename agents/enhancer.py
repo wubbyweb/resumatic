@@ -80,21 +80,32 @@ Your task is to produce an enhanced version of the resume JSON that:
   1. SUMMARY — Rewrite the professional summary to directly address the target role,
      highlighting the most relevant experience and skills. Keep it to 3–4 sentences.
 
-  2. EXPERIENCE BULLETS — For each job entry, rewrite and enhance the bullet points to:
+  2. EXPERIENCE COMPLETENESS — The input JSON contains an "experience" array with one
+     or more job entries. You MUST include EVERY job entry from the input in your output.
+     Do NOT drop, merge, or omit any job. If the input has 3 jobs, your output MUST
+     have exactly 3 jobs, in the same order, with the same titles, companies, and dates.
+
+  3. EXPERIENCE BULLETS — For EACH job entry (not just the most recent one), rewrite
+     and enhance the bullet points to:
        - Lead with strong action verbs.
        - Emphasise achievements that are most relevant to the job description.
        - Naturally incorporate keywords and technologies from the job description
          where they genuinely apply to the candidate's background.
        - Quantify impact where possible (use existing numbers; do not invent them).
+       - If a job entry has no bullets in the input, generate 2–3 relevant bullets
+         based on the job title and company context.
 
-  3. SKILLS — Reorder the skills list so that skills mentioned in the job description
+  4. SKILLS — Reorder the skills list so that skills mentioned in the job description
      appear first. Do not add new skills that don't exist in the original resume.
 
-  4. PRESERVATION RULES (strictly enforced):
+  5. PRESERVATION RULES (strictly enforced):
        - NEVER fabricate experience, job titles, companies, dates, degrees, or certifications.
        - NEVER add skills the candidate did not already have.
+       - NEVER drop or remove any job from the experience array — keep ALL of them.
+       - NEVER merge multiple jobs into one entry.
        - Keep all factual information (names, dates, companies, institutions) exactly as given.
        - The output JSON must have the same structure as the input JSON.
+       - The number of items in the "experience" array MUST equal the input count.
 
 Return ONLY the enhanced resume as a structured JSON object matching the schema."""
 

@@ -45,8 +45,8 @@ SECTION_HEADERS = {
 
 def _extract_text_from_pdf(path: str) -> str:
     """Extract raw text from a PDF file using PyMuPDF."""
-    import fitz  # PyMuPDF
-    doc = fitz.open(path)
+    import pymupdf  # replaces deprecated `import fitz`
+    doc = pymupdf.open(path)
     pages_text = [page.get_text() for page in doc]
     doc.close()
     return "\n".join(pages_text)
@@ -161,70 +161,112 @@ def _parse_experience(text: str) -> list[dict]:
     """
     Parse the experience section into a list of job entries.
 
-    Heuristic:
-      - A new job entry starts when we see a line with a title/company pattern.
-      - Bullet lines start with •, -, or *.
-      - Duration lines contain date-like patterns (e.g. "Jan 2022", "2020 – 2022").
+    Handles two common PDF layouts:
+      Layout A (inline):  "- Built REST APIs..."   (marker + text on same line)
+      Layout B (split):   "-"                      (marker alone)
+                          "Built REST APIs..."     (text on next line)
+
+    State machine:
+      - Detects job title lines via "Title - Company" or "Title — Company" separators.
+      - Detects duration lines via month/year patterns.
+      - Detects bullet markers (lone -, •, *) and reads the following non-marker
+        line as the bullet text (handles Layout B).
+      - Starts a new job entry whenever a new title/company line is detected,
+        regardless of whether the current entry has any bullets yet.
     """
     if not text:
         return []
 
     entries = []
-    lines = [l for l in text.split("\n") if l.strip()]
+    lines = [l.strip() for l in text.split("\n") if l.strip()]
 
-    current_entry = None
     DURATION_PATTERN = re.compile(
         r"(\b(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec|january|february|"
         r"march|april|june|july|august|september|october|november|december)\b.*?\d{4}"
         r"|\d{4}\s*[-–]\s*(\d{4}|present))",
         re.IGNORECASE,
     )
-    BULLET_PATTERN = re.compile(r"^[\•\-\*]\s+")
+    # Matches a bullet marker that is either alone OR has text after a space
+    INLINE_BULLET = re.compile(r"^[•\-\*]\s+(.+)")
+    # Matches a lone marker with nothing after it
+    LONE_MARKER   = re.compile(r"^[•\-\*]\s*$")
+    # Matches "Title - Company" or "Title — Company" (job header)
+    JOB_HEADER    = re.compile(r"^(.+?)\s+[-—]\s+(.+)$")
+
+    current_entry = None
+    awaiting_bullet_text = False   # True when we just saw a lone marker
+
+    def is_job_header(line: str) -> bool:
+        """Return True if this line looks like a job title + company."""
+        m = JOB_HEADER.match(line)
+        if not m:
+            return False
+        # Reject duration lines that happen to contain a dash (e.g. "Mar 2021 - Present")
+        if DURATION_PATTERN.search(line):
+            return False
+        return True
+
+    def start_new_entry(line: str):
+        """Parse a job header line and return a fresh entry dict."""
+        m = JOB_HEADER.match(line)
+        if m:
+            return {
+                "title": m.group(1).strip(),
+                "company": m.group(2).strip(),
+                "duration": "",
+                "bullets": [],
+            }
+        # Fallback: treat the whole line as the title
+        return {"title": line, "company": "", "duration": "", "bullets": []}
 
     for line in lines:
-        stripped = line.strip()
+        # --- Bullet marker alone on its own line (Layout B) ---
+        if LONE_MARKER.match(line):
+            awaiting_bullet_text = True
+            continue
 
-        if BULLET_PATTERN.match(stripped):
-            # Bullet point — belongs to the current entry
-            if current_entry:
-                bullet_text = BULLET_PATTERN.sub("", stripped).strip()
-                current_entry["bullets"].append(bullet_text)
-        elif DURATION_PATTERN.search(stripped):
-            # Duration line — attach to current entry
-            if current_entry:
-                current_entry["duration"] = stripped
-        else:
-            # Try to detect a new job entry: non-bullet, non-date, non-empty line
-            # Heuristic: if it looks like "Title — Company" or "Title at Company"
-            separator_match = re.search(r"\s+[—\-|at]\s+", stripped)
-            if separator_match and current_entry is None or (
-                separator_match and len(current_entry.get("bullets", [])) > 0
-            ):
-                if current_entry:
-                    entries.append(current_entry)
-                parts = re.split(r"\s+[—\-|at]\s+", stripped, maxsplit=1)
-                current_entry = {
-                    "title": parts[0].strip(),
-                    "company": parts[1].strip() if len(parts) > 1 else "",
-                    "duration": "",
-                    "bullets": [],
-                }
-            elif current_entry is None:
-                # First line in the section — treat as title
-                current_entry = {
-                    "title": stripped,
-                    "company": "",
-                    "duration": "",
-                    "bullets": [],
-                }
-            elif current_entry and not current_entry.get("company"):
-                # Second line may be the company name
-                current_entry["company"] = stripped
+        # --- Inline bullet: "- Some text here" (Layout A) ---
+        inline_match = INLINE_BULLET.match(line)
+        if inline_match:
+            awaiting_bullet_text = False
+            if current_entry is not None:
+                current_entry["bullets"].append(inline_match.group(1).strip())
+            continue
 
-    if current_entry:
+        # --- Text line arriving after a lone marker (Layout B bullet text) ---
+        if awaiting_bullet_text:
+            awaiting_bullet_text = False
+            if current_entry is not None:
+                # But only if this line is not a duration or another header
+                if not DURATION_PATTERN.search(line) and not is_job_header(line):
+                    current_entry["bullets"].append(line)
+                    continue
+            # If it turned out to be something else, fall through to normal handling
+
+        # --- Duration line ---
+        if DURATION_PATTERN.search(line) and not is_job_header(line):
+            if current_entry is not None:
+                current_entry["duration"] = line
+            continue
+
+        # --- Job header line (new job starts here) ---
+        if is_job_header(line):
+            if current_entry is not None:
+                entries.append(current_entry)
+            current_entry = start_new_entry(line)
+            awaiting_bullet_text = False
+            continue
+
+        # --- Anything else: possible second line of a company name or stray text ---
+        if current_entry is not None and not current_entry.get("company"):
+            current_entry["company"] = line
+
+    # Flush the last entry
+    if current_entry is not None:
         entries.append(current_entry)
 
     return entries
+
 
 
 def _parse_education(text: str) -> list[dict]:

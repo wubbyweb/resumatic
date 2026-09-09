@@ -26,6 +26,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, UploadFile, File, Form, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
@@ -41,6 +42,7 @@ from graph import resumatic_graph
 
 UPLOADS_DIR = os.path.join(os.path.dirname(__file__), "uploads")
 OUTPUT_DIR  = os.path.join(os.path.dirname(__file__), "output")
+FRONTEND_DIR = os.path.join(os.path.dirname(__file__), "frontend")
 ALLOWED_EXTENSIONS = {".pdf", ".docx"}
 
 
@@ -55,8 +57,9 @@ def _ensure_directories():
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Create required directories on startup."""
+    """Create required directories and validate configuration on startup."""
     _ensure_directories()
+    _validate_api_key()
     print("✅ Resumatic API started. Docs at http://localhost:8000/docs")
     yield
     print("🛑 Resumatic API shutting down.")
@@ -176,12 +179,24 @@ async def tailor_resume(
     except Exception as exc:
         # Clean up upload on pipeline failure
         _cleanup_file(upload_path)
+        if _is_auth_error(exc):
+            raise HTTPException(
+                status_code=401,
+                detail=(
+                    "OpenRouter API key is invalid or expired (401 User not found). "
+                    "Please update OPENROUTER_API_KEY in your .env file. "
+                    "Get a valid key at https://openrouter.ai/keys"
+                ),
+            )
         raise HTTPException(status_code=500, detail=f"Pipeline error: {str(exc)}")
 
     # --- Check for pipeline errors ---
     if result.get("error"):
         _cleanup_file(upload_path)
-        raise HTTPException(status_code=500, detail=result["error"])
+        error_msg = result["error"]
+        print(f"[API] Pipeline returned error: {error_msg}")
+        status = 401 if _is_auth_error(Exception(error_msg)) else 500
+        raise HTTPException(status_code=status, detail=error_msg)
 
     pdf_path = result.get("output_pdf_path", "")
     if not pdf_path or not os.path.exists(pdf_path):
@@ -213,6 +228,42 @@ def _cleanup_file(path: str):
             os.remove(path)
     except Exception:
         pass
+
+
+def _validate_api_key():
+    """
+    Warn loudly at startup if OPENROUTER_API_KEY is missing.
+    A missing or invalid key causes every pipeline request to fail with 401,
+    which surfaces as a 500 Internal Server Error to the client.
+    """
+    key = os.getenv("OPENROUTER_API_KEY", "").strip()
+    if not key:
+        print(
+            "\n⚠️  WARNING: OPENROUTER_API_KEY is not set in your .env file!\n"
+            "   All /tailor-resume requests will fail.\n"
+            "   Get a free key at: https://openrouter.ai/keys\n"
+            "   Then add to .env:  OPENROUTER_API_KEY=sk-or-v1-...\n"
+        )
+    else:
+        print(f"🔑 OpenRouter API key loaded (ends: ...{key[-6:]})")
+
+
+def _is_auth_error(exc: Exception) -> bool:
+    """Return True if the exception indicates an invalid/expired API key."""
+    msg = str(exc).lower()
+    return any(phrase in msg for phrase in [
+        "401", "user not found", "authentication", "invalid api key",
+        "openai authentication", "authenticationerror",
+    ])
+
+
+# ---------------------------------------------------------------------------
+# Static frontend — serves the web UI at /
+# ---------------------------------------------------------------------------
+# Mounted AFTER API routes so /health and /tailor-resume take precedence.
+# html=True serves index.html when the root path is requested.
+
+app.mount("/", StaticFiles(directory=FRONTEND_DIR, html=True), name="frontend")
 
 
 # ---------------------------------------------------------------------------
