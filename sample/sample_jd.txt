@@ -1,0 +1,36 @@
+Senior Backend Engineer — Cloud Platform Team
+
+About the Role:
+We are looking for a Senior Backend Engineer to join our Cloud Platform team. You will be
+responsible for designing, building, and maintaining scalable distributed systems that power
+our core product infrastructure.
+
+Responsibilities:
+- Design and implement high-throughput, low-latency backend services using Python and Go.
+- Lead the architecture of microservices running on AWS (ECS, Lambda, RDS, S3).
+- Build and maintain CI/CD pipelines using GitHub Actions and Terraform.
+- Collaborate with cross-functional teams (Product, DevOps, Frontend) to define APIs.
+- Mentor junior engineers and conduct thorough code reviews.
+- Drive observability best practices: metrics, logging, and distributed tracing (Datadog).
+- Participate in on-call rotations and incident response.
+
+Requirements:
+- 5+ years of backend engineering experience.
+- Proficiency in Python; experience with FastAPI or Django.
+- Strong experience with AWS cloud services (EC2, Lambda, RDS, S3, SQS, ECS).
+- Experience with containerisation (Docker, Kubernetes).
+- Solid understanding of distributed systems, message queues (Kafka, SQS), and databases (PostgreSQL).
+- Experience with Infrastructure as Code (Terraform or CDK).
+- Familiarity with CI/CD pipelines and DevOps practices.
+- Excellent communication skills and ability to work in a fast-paced environment.
+
+Nice to Have:
+- Experience with Go or Rust.
+- Knowledge of data streaming (Kafka, Kinesis).
+- Contributions to open-source projects.
+
+What We Offer:
+- Competitive salary and equity package.
+- Remote-first culture with flexible working hours.
+- Annual learning & development budget.
+- Health, dental, and vision insurance.
