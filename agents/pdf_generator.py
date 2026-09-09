@@ -24,9 +24,10 @@ Note: Uses FPDF2 v2.5+ XPos/YPos API (replaces deprecated ln=True/False).
 
 import os
 from uuid import uuid4
-from fpdf import FPDF, XPos, YPos
-from state import ResumaticState
 
+from fpdf import FPDF, XPos, YPos
+
+from state import ResumaticState
 
 # ---------------------------------------------------------------------------
 # Constants
@@ -282,4 +283,4 @@ def pdf_generator_node(state: ResumaticState) -> dict:
 
     except Exception as exc:
         print(f"[PDF Generator] ERROR: {exc}")
-        return {"error": f"PDF Generator failed: {str(exc)}"}
+        return {"error": f"PDF Generator failed: {exc!s}"}

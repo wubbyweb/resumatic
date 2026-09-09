@@ -21,10 +21,11 @@ Routing (deterministic via LangGraph conditional edges in graph.py):
 """
 
 import os
-from langchain_core.messages import HumanMessage, SystemMessage
-from state import ResumaticState
-from llm_factory import get_llm
 
+from langchain_core.messages import HumanMessage, SystemMessage
+
+from llm_factory import get_llm
+from state import ResumaticState
 
 # ---------------------------------------------------------------------------
 # System prompt for the Orchestrator LLM

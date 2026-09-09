@@ -18,16 +18,16 @@ This module is imported by main.py. The compiled graph is a singleton
 that is reused across all API requests.
 """
 
-from langgraph.graph import StateGraph, END
+from langgraph.graph import END, StateGraph
 
-from state import ResumaticState
 from agents import (
-    orchestrator_node,
-    route_based_on_step,
-    extractor_node,
     enhancer_node,
+    extractor_node,
+    orchestrator_node,
     pdf_generator_node,
+    route_based_on_step,
 )
+from state import ResumaticState
 
 
 def build_graph():

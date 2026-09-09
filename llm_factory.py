@@ -22,6 +22,7 @@ See https://openrouter.ai/models for the full list of available model slugs.
 """
 
 import os
+
 from langchain_openai import ChatOpenAI
 
 # OpenRouter's OpenAI-compatible API base URL
@@ -49,7 +50,7 @@ def get_llm(agent: str, temperature: float = 0.0) -> ChatOpenAI:
     """
     api_key = os.getenv("OPENROUTER_API_KEY", "").strip()
     if not api_key:
-        raise EnvironmentError(
+        raise OSError(
             "OPENROUTER_API_KEY is not set. "
             "Please add it to your .env file. "
             "Get your key at https://openrouter.ai/keys"

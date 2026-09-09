@@ -18,10 +18,10 @@ Notes:
   - No external API calls are made — this agent is fully offline.
 """
 
-import re
 import os
-from state import ResumaticState
+import re
 
+from state import ResumaticState
 
 # ---------------------------------------------------------------------------
 # Section header keywords
@@ -80,10 +80,8 @@ def _extract_name(lines: list[str]) -> str:
     for line in lines:
         stripped = line.strip()
         # Skip lines that look like contact info
-        if stripped and not re.search(r"[@|]|\d{5}", stripped):
-            # A name-like line: mostly alpha characters, spaces, hyphens
-            if re.match(r"^[A-Za-z\s\-\.]{2,50}$", stripped):
-                return stripped
+        if stripped and not re.search(r"[@|]|\d{5}", stripped) and re.match(r"^[A-Za-z\s\-\.]{2,50}$", stripped):
+            return stripped
     return ""
 
 
@@ -201,10 +199,7 @@ def _parse_experience(text: str) -> list[dict]:
         m = JOB_HEADER.match(line)
         if not m:
             return False
-        # Reject duration lines that happen to contain a dash (e.g. "Mar 2021 - Present")
-        if DURATION_PATTERN.search(line):
-            return False
-        return True
+        return not DURATION_PATTERN.search(line)
 
     def start_new_entry(line: str):
         """Parse a job header line and return a fresh entry dict."""
@@ -236,11 +231,10 @@ def _parse_experience(text: str) -> list[dict]:
         # --- Text line arriving after a lone marker (Layout B bullet text) ---
         if awaiting_bullet_text:
             awaiting_bullet_text = False
-            if current_entry is not None:
-                # But only if this line is not a duration or another header
-                if not DURATION_PATTERN.search(line) and not is_job_header(line):
-                    current_entry["bullets"].append(line)
-                    continue
+            # But only if this line is not a duration or another header
+            if current_entry is not None and not DURATION_PATTERN.search(line) and not is_job_header(line):
+                current_entry["bullets"].append(line)
+                continue
             # If it turned out to be something else, fall through to normal handling
 
         # --- Duration line ---
@@ -407,4 +401,4 @@ def extractor_node(state: ResumaticState) -> dict:
 
     except Exception as exc:
         print(f"[Extractor] ERROR: {exc}")
-        return {"error": f"Extractor failed: {str(exc)}"}
+        return {"error": f"Extractor failed: {exc!s}"}

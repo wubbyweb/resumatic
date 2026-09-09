@@ -20,12 +20,12 @@ a JSON object that conforms exactly to the ResumeData schema.
 """
 
 import json
+
 from langchain_core.messages import HumanMessage, SystemMessage
 from pydantic import BaseModel, Field
-from typing import List
-from state import ResumaticState
-from llm_factory import get_llm
 
+from llm_factory import get_llm
+from state import ResumaticState
 
 # ---------------------------------------------------------------------------
 # Pydantic models for structured LLM output
@@ -37,7 +37,7 @@ class ExperienceEntryModel(BaseModel):
     title: str = Field(description="Job title")
     company: str = Field(description="Employer name")
     duration: str = Field(description="Employment duration e.g. 'Jan 2022 – Present'")
-    bullets: List[str] = Field(description="Achievement / responsibility bullet points")
+    bullets: list[str] = Field(description="Achievement / responsibility bullet points")
 
 
 class EducationEntryModel(BaseModel):
@@ -58,11 +58,11 @@ class ResumeDataModel(BaseModel):
     phone: str = Field(description="Contact phone number")
     linkedin: str = Field(description="LinkedIn profile URL")
     summary: str = Field(description="Professional summary tailored to the target role")
-    skills: List[str] = Field(description="Skills list, prioritised by job-description relevance")
-    experience: List[ExperienceEntryModel] = Field(description="Work experience entries")
-    education: List[EducationEntryModel] = Field(description="Education entries")
-    certifications: List[str] = Field(description="Certifications and licences")
-    projects: List[ProjectEntryModel] = Field(description="Projects")
+    skills: list[str] = Field(description="Skills list, prioritised by job-description relevance")
+    experience: list[ExperienceEntryModel] = Field(description="Work experience entries")
+    education: list[EducationEntryModel] = Field(description="Education entries")
+    certifications: list[str] = Field(description="Certifications and licences")
+    projects: list[ProjectEntryModel] = Field(description="Projects")
 
 
 # ---------------------------------------------------------------------------
@@ -191,4 +191,4 @@ def enhancer_node(state: ResumaticState) -> dict:
 
     except Exception as exc:
         print(f"[Enhancer] ERROR: {exc}")
-        return {"error": f"Enhancer failed: {str(exc)}"}
+        return {"error": f"Enhancer failed: {exc!s}"}

@@ -19,22 +19,20 @@ API docs (auto-generated Swagger UI):
 """
 
 import os
-import shutil
-from uuid import uuid4
 from contextlib import asynccontextmanager
+from uuid import uuid4
 
-from fastapi import FastAPI, UploadFile, File, Form, HTTPException
+from dotenv import load_dotenv
+from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
-from dotenv import load_dotenv
 
 # Load environment variables from .env file
 load_dotenv()
 
 # Import the compiled LangGraph (built once at startup)
 from graph import resumatic_graph
-
 
 # ---------------------------------------------------------------------------
 # Directory setup
@@ -188,7 +186,7 @@ async def tailor_resume(
                     "Get a valid key at https://openrouter.ai/keys"
                 ),
             )
-        raise HTTPException(status_code=500, detail=f"Pipeline error: {str(exc)}")
+        raise HTTPException(status_code=500, detail=f"Pipeline error: {exc!s}")
 
     # --- Check for pipeline errors ---
     if result.get("error"):
