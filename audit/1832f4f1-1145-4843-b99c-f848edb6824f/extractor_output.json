@@ -1,0 +1,70 @@
+{
+  "extracted_resume": {
+    "name": "Rajesh Govindarajan",
+    "email": "raj.y2k@outlook.com",
+    "phone": "+1 617 410 6979",
+    "linkedin": "linkedin.com/in/rajgovin",
+    "summary": "Strategic IT Leader and Principal Engineer with over 20 years of experience architecting distributed systems \nand over 2 years building large-scale, production-grade agentic AI systems. Expert in multi-agent orchestration \narchitectures, AI Agents, and retrieval-augmented generation (RAG) systems for customer-facing conversational \nAI products. Proven track record of shipping features that drive engagement as well as building and scaling \nhigh-performing AI engineering teams. Adept at bridging technical complexity with product strategy and \nbusiness outcomes across cross-functional organizations. \nCore Skills \n \n●​\nStrategic Leadership: AI Roadmapping, Cross-functional Team Scaling, Build vs. Buy Governance, Enterprise AI \nTransformation.  \n●​\nAgentic Systems: Multi-agent orchestration & coordination | LangGraph | Agent-to-Agent (A2A) protocols, Memory \narchitectures (short-term context, long-term customer memory) | Stateful AI agents | Prompt engineering, fine-tuning & \npost-training strategies \n●​\nAI & ML: Agentic framworks: Langgraph, CrewAI, Semantic Kernel | Interruptable voice Agent | Conversational AI \nsystems | Pytorch, TensorFlow \n●​\nEnterprise Architecture: Cloud Strategy (AWS/Azure/GCP), API-First Design, Legacy System Modernization \n(AS400/Mainframe).",
+    "skills": [],
+    "experience": [
+      {
+        "title": "Engineered an LLM-powered solution for Marketing automation (MarTech",
+        "company": "Marketing Technology), encompassing",
+        "duration": "July 2024 - Present",
+        "bullets": []
+      },
+      {
+        "title": "●​ Headed the creation and growth of three AI communities in the Austin area",
+        "company": "ACM Austin, Austin AI Alliance",
+        "duration": "",
+        "bullets": []
+      },
+      {
+        "title": "and AI Collective. Currently establishing the foundational framework for community",
+        "company": "Agentics Foundation.",
+        "duration": "October 2024 - Present",
+        "bullets": []
+      },
+      {
+        "title": "Agentic Engineer",
+        "company": "Founding member​",
+        "duration": "April 2024 - Present",
+        "bullets": []
+      }
+    ],
+    "education": [
+      {
+        "degree": "PMP​",
+        "institution": "Fort Wayne, IN",
+        "year": ""
+      },
+      {
+        "degree": "PMI Institute​",
+        "institution": "",
+        "year": "February 2020 - present"
+      },
+      {
+        "degree": "MBA​",
+        "institution": "Fort Wayne, IN",
+        "year": ""
+      },
+      {
+        "degree": "Purdue University​",
+        "institution": "",
+        "year": "January 2020 - October 2021"
+      },
+      {
+        "degree": "MS Software Engineering​",
+        "institution": "India",
+        "year": ""
+      },
+      {
+        "degree": "BITS Pilani  University​",
+        "institution": "",
+        "year": "January 2007 - October 2010"
+      }
+    ],
+    "certifications": [],
+    "projects": []
+  }
+}

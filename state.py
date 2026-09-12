@@ -55,6 +55,7 @@ class ResumeData(TypedDict):
 
 class ResumaticState(TypedDict):
     # --- Inputs (populated by the FastAPI endpoint before invoking the graph) ---
+    job_id: str                # Unique identifier for the job run
     resume_file_path: str      # Absolute path to the uploaded resume file (PDF/DOCX)
     job_description: str       # Raw job description text submitted by the user
 

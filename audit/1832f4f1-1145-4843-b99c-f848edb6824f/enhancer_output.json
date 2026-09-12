@@ -1,0 +1,112 @@
+{
+  "enhanced_resume": {
+    "name": "Rajesh Govindarajan",
+    "email": "raj.y2k@outlook.com",
+    "phone": "+1 617 410 6979",
+    "linkedin": "linkedin.com/in/rajgovin",
+    "summary": "Strategic IT Leader and Principal Engineer with 20+ years architecting distributed, enterprise-scale systems and 2+ years delivering production-grade agentic AI and AI/ML solutions on cloud platforms (AWS/Azure/GCP). Deep expertise in systems engineering, system architecture, and system integration, with hands-on delivery of data pipelines, retrieval-augmented generation (RAG) systems, and multi-agent orchestration for customer-facing conversational AI products. Proven record of translating business requirements into technical specifications, governing build-vs-buy decisions, and managing complex technical programs using Agile methodologies (PMP certified, MBA). Adept at bridging technical complexity with product strategy and business outcomes while scaling high-performing AI engineering teams across cross-functional organizations.",
+    "skills": [
+      "Cloud Strategy (AWS/Azure/GCP)",
+      "Enterprise Architecture",
+      "API-First Design",
+      "Legacy System Modernization (AS400/Mainframe)",
+      "Distributed Systems Architecture",
+      "AI Roadmapping",
+      "Build vs. Buy Governance",
+      "Enterprise AI Transformation",
+      "Cross-functional Team Scaling",
+      "Multi-agent Orchestration & Coordination",
+      "LangGraph",
+      "CrewAI",
+      "Semantic Kernel",
+      "Agent-to-Agent (A2A) Protocols",
+      "Memory Architectures (short-term context, long-term customer memory)",
+      "Stateful AI Agents",
+      "Retrieval-Augmented Generation (RAG)",
+      "Prompt Engineering, Fine-tuning & Post-training Strategies",
+      "Conversational AI Systems",
+      "Interruptible Voice Agents",
+      "PyTorch",
+      "TensorFlow"
+    ],
+    "experience": [
+      {
+        "title": "Engineered an LLM-powered solution for Marketing automation (MarTech",
+        "company": "Marketing Technology), encompassing",
+        "duration": "July 2024 - Present",
+        "bullets": [
+          "Designed and delivered an LLM-powered marketing automation (MarTech) platform, translating stakeholder requirements into technical specifications and system architecture for production deployment.",
+          "Built scalable data pipelines and AI/ML model deployment workflows on cloud-based services (AWS/Azure/GCP), enabling reliable retrieval-augmented generation (RAG) and stateful agent execution.",
+          "Integrated agentic AI capabilities into existing enterprise systems, ensuring seamless system integration, governed data flow, and API-first interoperability with downstream MarTech tooling.",
+          "Drove iterative delivery using Agile methodologies, managing timelines, resources, and deployment risk while maintaining clear documentation of designs and operational procedures.",
+          "Partnered with data scientists, AI researchers, and business stakeholders to align AI roadmap and build-vs-buy decisions with measurable business outcomes."
+        ]
+      },
+      {
+        "title": "●​ Headed the creation and growth of three AI communities in the Austin area",
+        "company": "ACM Austin, Austin AI Alliance",
+        "duration": "",
+        "bullets": [
+          "Founded and scaled three Austin-area AI communities, growing cross-functional engineering and data science membership through structured programming and technical events.",
+          "Led technical workshops on agentic architectures, AI/ML model deployment, and cloud-based AI services, elevating practitioner capability across the local ecosystem.",
+          "Cultivated partnerships with enterprises and practitioners to share best practices in system architecture, automation, and responsible enterprise AI adoption."
+        ]
+      },
+      {
+        "title": "and AI Collective. Currently establishing the foundational framework for community",
+        "company": "Agentics Foundation.",
+        "duration": "October 2024 - Present",
+        "bullets": [
+          "Established the foundational technical and governance framework for the Agentics Foundation community, defining architecture standards and documentation practices for agentic systems.",
+          "Authored reference architectures and requirements guidance covering multi-agent orchestration, agent-to-agent (A2A) protocols, and memory architectures for production deployments.",
+          "Coordinated contributors and working groups, applying project and risk management principles to deliver community initiatives on schedule."
+        ]
+      },
+      {
+        "title": "Agentic Engineer",
+        "company": "Founding member​",
+        "duration": "April 2024 - Present",
+        "bullets": [
+          "Architected and shipped production-grade agentic AI systems using LangGraph, CrewAI, and Semantic Kernel, including interruptible voice and conversational AI agents.",
+          "Implemented multi-agent orchestration, short-term context and long-term customer memory, and RAG retrieval layers deployed on cloud infrastructure for scalability and resilience.",
+          "Applied prompt engineering, fine-tuning, and post-training strategies with PyTorch/TensorFlow to improve agent accuracy, latency, and customer engagement.",
+          "Automated model and pipeline deployment through CI/CD-style workflows, reducing release friction and improving operational reliability of deployed AI/ML solutions."
+        ]
+      }
+    ],
+    "education": [
+      {
+        "degree": "PMP​",
+        "institution": "Fort Wayne, IN",
+        "year": ""
+      },
+      {
+        "degree": "PMI Institute​",
+        "institution": "",
+        "year": "February 2020 - present"
+      },
+      {
+        "degree": "MBA​",
+        "institution": "Fort Wayne, IN",
+        "year": ""
+      },
+      {
+        "degree": "Purdue University​",
+        "institution": "",
+        "year": "January 2020 - October 2021"
+      },
+      {
+        "degree": "MS Software Engineering​",
+        "institution": "India",
+        "year": ""
+      },
+      {
+        "degree": "BITS Pilani  University​",
+        "institution": "",
+        "year": "January 2007 - October 2010"
+      }
+    ],
+    "certifications": [],
+    "projects": []
+  }
+}

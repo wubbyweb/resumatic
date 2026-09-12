@@ -1,0 +1,159 @@
+{
+  "job_id": "24106e10-efc1-4da7-b951-0d00f1c29a50",
+  "resume_file_path": "/Users/rj/Programs/resumatic/uploads/24106e10-efc1-4da7-b951-0d00f1c29a50.pdf",
+  "job_description": "Senior Backend Engineer — Cloud Platform Team\r\n\r\nAbout the Role:\r\nWe are looking for a Senior Backend Engineer to join our Cloud Platform team. You will be\r\nresponsible for designing, building, and maintaining scalable distributed systems that power\r\nour core product infrastructure.\r\n\r\nResponsibilities:\r\n- Design and implement high-throughput, low-latency backend services using Python and Go.\r\n- Lead the architecture of microservices running on AWS (ECS, Lambda, RDS, S3).\r\n- Build and maintain CI/CD pipelines using GitHub Actions and Terraform.\r\n- Collaborate with cross-functional teams (Product, DevOps, Frontend) to define APIs.\r\n- Mentor junior engineers and conduct thorough code reviews.\r\n- Drive observability best practices: metrics, logging, and distributed tracing (Datadog).\r\n- Participate in on-call rotations and incident response.\r\n\r\nRequirements:\r\n- 5+ years of backend engineering experience.\r\n- Proficiency in Python; experience with FastAPI or Django.\r\n- Strong experience with AWS cloud services (EC2, Lambda, RDS, S3, SQS, ECS).\r\n- Experience with containerisation (Docker, Kubernetes).\r\n- Solid understanding of distributed systems, message queues (Kafka, SQS), and databases (PostgreSQL).\r\n- Experience with Infrastructure as Code (Terraform or CDK).\r\n- Familiarity with CI/CD pipelines and DevOps practices.\r\n- Excellent communication skills and ability to work in a fast-paced environment.\r\n\r\nNice to Have:\r\n- Experience with Go or Rust.\r\n- Knowledge of data streaming (Kafka, Kinesis).\r\n- Contributions to open-source projects.\r\n\r\nWhat We Offer:\r\n- Competitive salary and equity package.\r\n- Remote-first culture with flexible working hours.\r\n- Annual learning & development budget.\r\n- Health, dental, and vision insurance.",
+  "extracted_resume": {
+    "name": "ALEX MORGAN",
+    "email": "alex.morgan@email.com",
+    "phone": "+1-512-555-0177",
+    "linkedin": "linkedin.com/in/alexmorgan",
+    "summary": "Software engineer with 6 years of experience building backend systems and web applications. Comfortable\nworking across the full stack. Enjoys solving complex problems and building reliable software.",
+    "skills": [
+      "Python",
+      "JavaScript",
+      "Node.js",
+      "React",
+      "PostgreSQL",
+      "MySQL",
+      "REST APIs",
+      "Git",
+      "Linux",
+      "Docker",
+      "AWS (EC2",
+      "S3)",
+      "CI/CD",
+      "Agile"
+    ],
+    "experience": [
+      {
+        "title": "Backend Engineer",
+        "company": "TechFlow Inc",
+        "duration": "Mar 2021 - Present",
+        "bullets": [
+          "Built and maintained REST APIs used by over 50,000 active users",
+          "Worked on migrating parts of the monolithic application to smaller services",
+          "Improved database query performance by optimizing indexes and rewriting slow queries, cutting average",
+          "Set up automated testing pipelines using GitHub Actions",
+          "Helped onboard 3 new team members and participated in code reviews"
+        ]
+      },
+      {
+        "title": "Junior Developer",
+        "company": "Webcraft Solutions",
+        "duration": "Jul 2018 - Feb 2021",
+        "bullets": [
+          "Developed customer-facing features for an e-commerce platform using React and Node.js",
+          "Integrated third-party payment APIs including Stripe and PayPal",
+          "Maintained MySQL databases and wrote migration scripts",
+          "Fixed bugs and resolved support tickets for production systems"
+        ]
+      }
+    ],
+    "education": [
+      {
+        "degree": "B.S. Computer Science - University of Texas at Austin",
+        "institution": "",
+        "year": "Graduated 2018"
+      }
+    ],
+    "certifications": [
+      "AWS Certified Developer - Associate (2022)",
+      "Docker Certified Associate (2023)"
+    ],
+    "projects": [
+      {
+        "name": "DevTrack - Open Source Project Management CLI",
+        "description": ""
+      },
+      {
+        "name": "Built a command-line tool for tracking development tasks. 200+ GitHub stars. Written in Python with PostgreSQL",
+        "description": ""
+      },
+      {
+        "name": "backend.",
+        "description": ""
+      }
+    ]
+  },
+  "enhanced_resume": {
+    "name": "ALEX MORGAN",
+    "email": "alex.morgan@email.com",
+    "phone": "+1-512-555-0177",
+    "linkedin": "linkedin.com/in/alexmorgan",
+    "summary": "Backend engineer with 6 years of experience designing and scaling Python-based services, REST APIs, and cloud infrastructure on AWS. Experienced in decomposing monolithic applications into services, tuning PostgreSQL and MySQL performance, and building CI/CD pipelines with GitHub Actions and Docker. AWS Certified Developer and Docker Certified Associate who mentors teammates and drives code-review and testing standards. Seeking a Senior Backend Engineer role focused on scalable, distributed cloud platform systems.",
+    "skills": [
+      "Python",
+      "AWS (EC2",
+      "S3)",
+      "Docker",
+      "PostgreSQL",
+      "REST APIs",
+      "CI/CD",
+      "Node.js",
+      "JavaScript",
+      "MySQL",
+      "Git",
+      "Linux",
+      "React",
+      "Agile"
+    ],
+    "experience": [
+      {
+        "title": "Backend Engineer",
+        "company": "TechFlow Inc",
+        "duration": "Mar 2021 - Present",
+        "bullets": [
+          "Designed, built, and maintained high-throughput REST APIs in Python serving over 50,000 active users, collaborating with Product and Frontend teams to define API contracts",
+          "Led incremental migration of a monolithic application into smaller, independently deployable services, improving scalability and deployment velocity",
+          "Optimized database performance by redesigning indexes and rewriting slow queries, cutting average query response time and reducing production load",
+          "Built and maintained CI/CD pipelines with GitHub Actions and Docker, automating test and deployment workflows to improve release reliability",
+          "Mentored 3 new engineers through onboarding and conducted thorough code reviews, raising overall code quality and team throughput"
+        ]
+      },
+      {
+        "title": "Junior Developer",
+        "company": "Webcraft Solutions",
+        "duration": "Jul 2018 - Feb 2021",
+        "bullets": [
+          "Developed customer-facing e-commerce features using React and Node.js, delivering production functionality in an Agile, cross-functional team",
+          "Integrated third-party payment APIs including Stripe and PayPal, ensuring secure and reliable transaction processing",
+          "Maintained MySQL databases and authored migration scripts to support schema evolution with zero data loss",
+          "Diagnosed and resolved production bugs and support tickets, strengthening system stability and incident response skills"
+        ]
+      }
+    ],
+    "education": [
+      {
+        "degree": "B.S. Computer Science - University of Texas at Austin",
+        "institution": "",
+        "year": "Graduated 2018"
+      }
+    ],
+    "certifications": [
+      "AWS Certified Developer - Associate (2022)",
+      "Docker Certified Associate (2023)"
+    ],
+    "projects": [
+      {
+        "name": "DevTrack - Open Source Project Management CLI",
+        "description": "Open-source command-line tool for tracking development tasks, built in Python with a PostgreSQL backend; earned 200+ GitHub stars from the developer community."
+      },
+      {
+        "name": "Built a command-line tool for tracking development tasks. 200+ GitHub stars. Written in Python with PostgreSQL",
+        "description": "Python CLI application backed by PostgreSQL for developer task tracking; maintained as an open-source project with 200+ GitHub stars."
+      },
+      {
+        "name": "backend.",
+        "description": "PostgreSQL-backed backend component of the DevTrack CLI, implemented in Python."
+      }
+    ]
+  },
+  "output_pdf_path": "/Users/rj/Programs/resumatic/output/5aa7f64f-bfb5-4691-84cc-73df76010472_tailored_resume.pdf",
+  "messages": [
+    "Resume extraction has started — I’ll confirm once the structured content is extracted and then move to content enhancement.",
+    "Extraction complete — moving on to the Content Enhancer to tailor and strengthen the resume content for the target role.",
+    "Enhancement complete — handing off to the PDF Generator for final resume production."
+  ],
+  "current_step": "generate",
+  "error": null
+}

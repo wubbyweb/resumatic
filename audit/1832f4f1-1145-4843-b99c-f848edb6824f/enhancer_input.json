@@ -1,0 +1,81 @@
+{
+  "job_id": "1832f4f1-1145-4843-b99c-f848edb6824f",
+  "resume_file_path": "/Users/rj/Programs/resumatic/uploads/1832f4f1-1145-4843-b99c-f848edb6824f.pdf",
+  "job_description": "Responsibilities\r\nCollaborate with data scientists, AI researchers, and business stakeholders to understand client requirements and translate them into technical specifications for AI/ML solution deployment\r\nDesign, develop, and implement robust and scalable data pipelines and AI/ML model deployment strategies utilizing cloud-based services, primarily AWS\r\nIntegrate AI/ML solutions into existing enterprise systems, ensuring seamless system integration and data flow\r\nUtilize Agile methodologies for project execution, ensuring timely delivery and iterative development of AI/ML products\r\nApply principles of Systems Engineering and Model-Based Systems Engineering (MBSE) to ensure comprehensive system design, architecture, and documentation\r\nDevelop and implement automation technologies for continuous integration, continuous deployment (CI/CD) of AI/ML models and data products\r\nManage project timelines, resources, and risks effectively, applying strong Project Management and Risk Management principles\r\nConduct thorough requirements management, ensuring solutions meet defined business needs and technical specifications\r\nDevelop and maintain clear documentation for system designs, architectures, and operational procedures\r\nProvide technical expertise and support to clients on deployed AI/ML solutions, troubleshooting issues and ensuring optimal performance\r\nQualification\r\nPython\r\nAmazon Web Services (AWS)\r\nCloud Computing\r\nAI/ML Model Deployment\r\nData Pipelines\r\nSystems Engineering\r\nSystem Architecture\r\nSystem Integration\r\nAgile Methodology\r\nAutomation Technology\r\nRequirements Management\r\nProject Management\r\nRequired\r\n* Bachelor's or Master's degree in Computer Science, Engineering, Data Science, a related quantitative field, or equivalent years of industry experience\r\n* Proven experience with Agile Methodology in a professional environment\r\n* Strong proficiency in Python (Programming Language) for data manipulation, scripting, and AI/ML development\r\n* Extensive experience with Amazon Web Services (AWS) for deploying and managing cloud-based services and infrastructure\r\n* Demonstrated expertise in Cloud Computing and Cloud Based Services, particularly in the context of data and AI applications\r\n* Solid understanding of Systems Engineering principles, including System Designs, Systems Architecture, and System Integration\r\n* Familiarity with Enterprise Architecture Frameworks\r\n* Proven ability in Automation Technology for deployment and operational tasks\r\n* Strong Project Management skills with experience in managing complex technical projects\r\n* Experience with Requirements Management and defining technical specifications\r\n* Understanding of Risk Management principles, especially in the context of technology deployment\r\nPreferred\r\n* Experience with Model-Based Systems Engineering (MBSE) is a plus",
+  "extracted_resume": {
+    "name": "Rajesh Govindarajan",
+    "email": "raj.y2k@outlook.com",
+    "phone": "+1 617 410 6979",
+    "linkedin": "linkedin.com/in/rajgovin",
+    "summary": "Strategic IT Leader and Principal Engineer with over 20 years of experience architecting distributed systems \nand over 2 years building large-scale, production-grade agentic AI systems. Expert in multi-agent orchestration \narchitectures, AI Agents, and retrieval-augmented generation (RAG) systems for customer-facing conversational \nAI products. Proven track record of shipping features that drive engagement as well as building and scaling \nhigh-performing AI engineering teams. Adept at bridging technical complexity with product strategy and \nbusiness outcomes across cross-functional organizations. \nCore Skills \n \n●​\nStrategic Leadership: AI Roadmapping, Cross-functional Team Scaling, Build vs. Buy Governance, Enterprise AI \nTransformation.  \n●​\nAgentic Systems: Multi-agent orchestration & coordination | LangGraph | Agent-to-Agent (A2A) protocols, Memory \narchitectures (short-term context, long-term customer memory) | Stateful AI agents | Prompt engineering, fine-tuning & \npost-training strategies \n●​\nAI & ML: Agentic framworks: Langgraph, CrewAI, Semantic Kernel | Interruptable voice Agent | Conversational AI \nsystems | Pytorch, TensorFlow \n●​\nEnterprise Architecture: Cloud Strategy (AWS/Azure/GCP), API-First Design, Legacy System Modernization \n(AS400/Mainframe).",
+    "skills": [],
+    "experience": [
+      {
+        "title": "Engineered an LLM-powered solution for Marketing automation (MarTech",
+        "company": "Marketing Technology), encompassing",
+        "duration": "July 2024 - Present",
+        "bullets": []
+      },
+      {
+        "title": "●​ Headed the creation and growth of three AI communities in the Austin area",
+        "company": "ACM Austin, Austin AI Alliance",
+        "duration": "",
+        "bullets": []
+      },
+      {
+        "title": "and AI Collective. Currently establishing the foundational framework for community",
+        "company": "Agentics Foundation.",
+        "duration": "October 2024 - Present",
+        "bullets": []
+      },
+      {
+        "title": "Agentic Engineer",
+        "company": "Founding member​",
+        "duration": "April 2024 - Present",
+        "bullets": []
+      }
+    ],
+    "education": [
+      {
+        "degree": "PMP​",
+        "institution": "Fort Wayne, IN",
+        "year": ""
+      },
+      {
+        "degree": "PMI Institute​",
+        "institution": "",
+        "year": "February 2020 - present"
+      },
+      {
+        "degree": "MBA​",
+        "institution": "Fort Wayne, IN",
+        "year": ""
+      },
+      {
+        "degree": "Purdue University​",
+        "institution": "",
+        "year": "January 2020 - October 2021"
+      },
+      {
+        "degree": "MS Software Engineering​",
+        "institution": "India",
+        "year": ""
+      },
+      {
+        "degree": "BITS Pilani  University​",
+        "institution": "",
+        "year": "January 2007 - October 2010"
+      }
+    ],
+    "certifications": [],
+    "projects": []
+  },
+  "enhanced_resume": null,
+  "output_pdf_path": "",
+  "messages": [
+    "Resume extraction started — I’ll confirm once the structured content is extracted and we’ll move to content enhancement.",
+    "Extraction complete — proceeding to the Content Enhancer to tailor and strengthen the resume content for the target role."
+  ],
+  "current_step": "enhance",
+  "error": null
+}

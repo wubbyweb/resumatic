@@ -10,7 +10,8 @@ Responsibilities:
   1. Analyse the job description for key requirements, keywords, and skills.
   2. Rewrite the professional summary to align with the target role.
   3. Enhance experience bullet points — emphasise relevant achievements and
-     naturally incorporate job-description keywords.
+     naturally incorporate job-description keywords. Retain the company name, job title / role
+     and duration as-is. Also retain the bullet points as-is.
   4. Reorder skills to prioritise those mentioned in the job description.
   5. NEVER fabricate experience, skills, or credentials that don't already
      exist in the extracted resume.
@@ -24,6 +25,7 @@ import json
 from langchain_core.messages import HumanMessage, SystemMessage
 from pydantic import BaseModel, Field
 
+from audit_logger import log_audit
 from llm_factory import get_llm
 from state import ResumaticState
 
@@ -124,6 +126,14 @@ def _get_llm():
 # ---------------------------------------------------------------------------
 
 def enhancer_node(state: ResumaticState) -> dict:
+    job_id = state.get("job_id", "")
+    log_audit(job_id, "enhancer", "input", state)
+    result = _enhancer_node(state)
+    log_audit(job_id, "enhancer", "output", result)
+    return result
+
+
+def _enhancer_node(state: ResumaticState) -> dict:
     """
     Agent 3 — Content Enhancer node.
 

@@ -24,6 +24,7 @@ import os
 
 from langchain_core.messages import HumanMessage, SystemMessage
 
+from audit_logger import log_audit
 from llm_factory import get_llm
 from state import ResumaticState
 
@@ -53,6 +54,14 @@ def _get_llm():
 # ---------------------------------------------------------------------------
 
 def orchestrator_node(state: ResumaticState) -> dict:
+    job_id = state.get("job_id", "")
+    log_audit(job_id, "orchestrator", "input", state)
+    result = _orchestrator_node(state)
+    log_audit(job_id, "orchestrator", "output", result)
+    return result
+
+
+def _orchestrator_node(state: ResumaticState) -> dict:
     """
     The Orchestrator decides what to do next based on the current pipeline step.
 

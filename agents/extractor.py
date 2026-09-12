@@ -21,6 +21,7 @@ Notes:
 import os
 import re
 
+from audit_logger import log_audit
 from state import ResumaticState
 
 # ---------------------------------------------------------------------------
@@ -348,6 +349,14 @@ def _parse_projects(text: str) -> list[dict]:
 # ---------------------------------------------------------------------------
 
 def extractor_node(state: ResumaticState) -> dict:
+    job_id = state.get("job_id", "")
+    log_audit(job_id, "extractor", "input", state)
+    result = _extractor_node(state)
+    log_audit(job_id, "extractor", "output", result)
+    return result
+
+
+def _extractor_node(state: ResumaticState) -> dict:
     """
     Agent 2 — Resume Extractor node.
 

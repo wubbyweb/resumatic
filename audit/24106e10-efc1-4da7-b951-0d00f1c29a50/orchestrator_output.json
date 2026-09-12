@@ -1,0 +1,9 @@
+{
+  "current_step": "done",
+  "messages": [
+    "Resume extraction has started — I’ll confirm once the structured content is extracted and then move to content enhancement.",
+    "Extraction complete — moving on to the Content Enhancer to tailor and strengthen the resume content for the target role.",
+    "Enhancement complete — handing off to the PDF Generator for final resume production.",
+    "PDF generation complete — your tailored resume is ready for download and submission."
+  ]
+}

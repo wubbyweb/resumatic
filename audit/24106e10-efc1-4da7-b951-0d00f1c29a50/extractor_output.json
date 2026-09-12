@@ -1,0 +1,75 @@
+{
+  "extracted_resume": {
+    "name": "ALEX MORGAN",
+    "email": "alex.morgan@email.com",
+    "phone": "+1-512-555-0177",
+    "linkedin": "linkedin.com/in/alexmorgan",
+    "summary": "Software engineer with 6 years of experience building backend systems and web applications. Comfortable\nworking across the full stack. Enjoys solving complex problems and building reliable software.",
+    "skills": [
+      "Python",
+      "JavaScript",
+      "Node.js",
+      "React",
+      "PostgreSQL",
+      "MySQL",
+      "REST APIs",
+      "Git",
+      "Linux",
+      "Docker",
+      "AWS (EC2",
+      "S3)",
+      "CI/CD",
+      "Agile"
+    ],
+    "experience": [
+      {
+        "title": "Backend Engineer",
+        "company": "TechFlow Inc",
+        "duration": "Mar 2021 - Present",
+        "bullets": [
+          "Built and maintained REST APIs used by over 50,000 active users",
+          "Worked on migrating parts of the monolithic application to smaller services",
+          "Improved database query performance by optimizing indexes and rewriting slow queries, cutting average",
+          "Set up automated testing pipelines using GitHub Actions",
+          "Helped onboard 3 new team members and participated in code reviews"
+        ]
+      },
+      {
+        "title": "Junior Developer",
+        "company": "Webcraft Solutions",
+        "duration": "Jul 2018 - Feb 2021",
+        "bullets": [
+          "Developed customer-facing features for an e-commerce platform using React and Node.js",
+          "Integrated third-party payment APIs including Stripe and PayPal",
+          "Maintained MySQL databases and wrote migration scripts",
+          "Fixed bugs and resolved support tickets for production systems"
+        ]
+      }
+    ],
+    "education": [
+      {
+        "degree": "B.S. Computer Science - University of Texas at Austin",
+        "institution": "",
+        "year": "Graduated 2018"
+      }
+    ],
+    "certifications": [
+      "AWS Certified Developer - Associate (2022)",
+      "Docker Certified Associate (2023)"
+    ],
+    "projects": [
+      {
+        "name": "DevTrack - Open Source Project Management CLI",
+        "description": ""
+      },
+      {
+        "name": "Built a command-line tool for tracking development tasks. 200+ GitHub stars. Written in Python with PostgreSQL",
+        "description": ""
+      },
+      {
+        "name": "backend.",
+        "description": ""
+      }
+    ]
+  }
+}

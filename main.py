@@ -144,7 +144,8 @@ async def tailor_resume(
         )
 
     # --- Save uploaded file to a unique temp path ---
-    upload_filename = f"{uuid4()}{ext}"
+    job_id = str(uuid4())
+    upload_filename = f"{job_id}{ext}"
     upload_path = os.path.join(UPLOADS_DIR, upload_filename)
 
     try:
@@ -162,6 +163,7 @@ async def tailor_resume(
         print(f"{'='*60}")
 
         initial_state = {
+            "job_id": job_id,
             "resume_file_path": upload_path,
             "job_description": job_description,
             "extracted_resume": None,

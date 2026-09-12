@@ -1,0 +1,75 @@
+{
+  "enhanced_resume": {
+    "name": "ALEX MORGAN",
+    "email": "alex.morgan@email.com",
+    "phone": "+1-512-555-0177",
+    "linkedin": "linkedin.com/in/alexmorgan",
+    "summary": "Backend engineer with 6 years of experience designing and scaling Python-based services, REST APIs, and cloud infrastructure on AWS. Experienced in decomposing monolithic applications into services, tuning PostgreSQL and MySQL performance, and building CI/CD pipelines with GitHub Actions and Docker. AWS Certified Developer and Docker Certified Associate who mentors teammates and drives code-review and testing standards. Seeking a Senior Backend Engineer role focused on scalable, distributed cloud platform systems.",
+    "skills": [
+      "Python",
+      "AWS (EC2",
+      "S3)",
+      "Docker",
+      "PostgreSQL",
+      "REST APIs",
+      "CI/CD",
+      "Node.js",
+      "JavaScript",
+      "MySQL",
+      "Git",
+      "Linux",
+      "React",
+      "Agile"
+    ],
+    "experience": [
+      {
+        "title": "Backend Engineer",
+        "company": "TechFlow Inc",
+        "duration": "Mar 2021 - Present",
+        "bullets": [
+          "Designed, built, and maintained high-throughput REST APIs in Python serving over 50,000 active users, collaborating with Product and Frontend teams to define API contracts",
+          "Led incremental migration of a monolithic application into smaller, independently deployable services, improving scalability and deployment velocity",
+          "Optimized database performance by redesigning indexes and rewriting slow queries, cutting average query response time and reducing production load",
+          "Built and maintained CI/CD pipelines with GitHub Actions and Docker, automating test and deployment workflows to improve release reliability",
+          "Mentored 3 new engineers through onboarding and conducted thorough code reviews, raising overall code quality and team throughput"
+        ]
+      },
+      {
+        "title": "Junior Developer",
+        "company": "Webcraft Solutions",
+        "duration": "Jul 2018 - Feb 2021",
+        "bullets": [
+          "Developed customer-facing e-commerce features using React and Node.js, delivering production functionality in an Agile, cross-functional team",
+          "Integrated third-party payment APIs including Stripe and PayPal, ensuring secure and reliable transaction processing",
+          "Maintained MySQL databases and authored migration scripts to support schema evolution with zero data loss",
+          "Diagnosed and resolved production bugs and support tickets, strengthening system stability and incident response skills"
+        ]
+      }
+    ],
+    "education": [
+      {
+        "degree": "B.S. Computer Science - University of Texas at Austin",
+        "institution": "",
+        "year": "Graduated 2018"
+      }
+    ],
+    "certifications": [
+      "AWS Certified Developer - Associate (2022)",
+      "Docker Certified Associate (2023)"
+    ],
+    "projects": [
+      {
+        "name": "DevTrack - Open Source Project Management CLI",
+        "description": "Open-source command-line tool for tracking development tasks, built in Python with a PostgreSQL backend; earned 200+ GitHub stars from the developer community."
+      },
+      {
+        "name": "Built a command-line tool for tracking development tasks. 200+ GitHub stars. Written in Python with PostgreSQL",
+        "description": "Python CLI application backed by PostgreSQL for developer task tracking; maintained as an open-source project with 200+ GitHub stars."
+      },
+      {
+        "name": "backend.",
+        "description": "PostgreSQL-backed backend component of the DevTrack CLI, implemented in Python."
+      }
+    ]
+  }
+}

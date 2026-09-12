@@ -27,7 +27,31 @@ from uuid import uuid4
 
 from fpdf import FPDF, XPos, YPos
 
+from audit_logger import log_audit
 from state import ResumaticState
+
+
+def sanitize_text(text: str) -> str:
+    if not isinstance(text, str):
+        return text
+    replacements = {
+        '•': '-', '●': '-', '▪': '-', '–': '-', '—': '-',
+        '’': "'", '‘': "'", '“': '"', '”': '"', '…': '...',
+        '\u200b': ''
+    }
+    for k, v in replacements.items():
+        text = text.replace(k, v)
+    return text.encode('latin-1', 'replace').decode('latin-1')
+
+
+def sanitize_resume_data(data):
+    if isinstance(data, str):
+        return sanitize_text(data)
+    elif isinstance(data, list):
+        return [sanitize_resume_data(item) for item in data]
+    elif isinstance(data, dict):
+        return {k: sanitize_resume_data(v) for k, v in data.items()}
+    return data
 
 # ---------------------------------------------------------------------------
 # Constants
@@ -248,6 +272,14 @@ class ResumePDF(FPDF):
 # ---------------------------------------------------------------------------
 
 def pdf_generator_node(state: ResumaticState) -> dict:
+    job_id = state.get("job_id", "")
+    log_audit(job_id, "pdf_generator", "input", state)
+    result = _pdf_generator_node(state)
+    log_audit(job_id, "pdf_generator", "output", result)
+    return result
+
+
+def _pdf_generator_node(state: ResumaticState) -> dict:
     """
     Agent 4 — PDF Generator node.
 
@@ -260,6 +292,9 @@ def pdf_generator_node(state: ResumaticState) -> dict:
     enhanced_resume = state.get("enhanced_resume")
     if not enhanced_resume:
         return {"error": "PDF Generator received empty enhanced_resume."}
+
+    # Sanitize unicode characters that are not supported by the default Helvetica font
+    enhanced_resume = sanitize_resume_data(enhanced_resume)
 
     try:
         os.makedirs(OUTPUT_DIR, exist_ok=True)
