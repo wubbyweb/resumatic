@@ -49,6 +49,49 @@ tailored_resume.pdf
 
 ---
 
+# Resumatic Component Dependencies
+
+This diagram illustrates the dependencies between all `.py` files in the Resumatic project. It focuses on internal module imports.
+
+```mermaid
+graph TD
+    %% Define nodes with links to files
+    Main["main.py"]
+    Graph["graph.py"]
+    State["state.py"]
+    LLMFactory["llm_factory.py"]
+    
+    subgraph Agents Module
+        AgentsInit["agents/__init__.py"]
+        Orchestrator["agents/orchestrator.py"]
+        Extractor["agents/extractor.py"]
+        Enhancer["agents/enhancer.py"]
+        PDFGen["agents/pdf_generator.py"]
+    end
+
+    %% Define relationships based on imports
+    Main -->|imports| Graph
+    
+    Graph -->|imports| AgentsInit
+    Graph -->|imports| State
+    
+    AgentsInit -->|imports| Orchestrator
+    AgentsInit -->|imports| Extractor
+    AgentsInit -->|imports| Enhancer
+    AgentsInit -->|imports| PDFGen
+
+    Orchestrator -->|imports| LLMFactory
+    Orchestrator -->|imports| State
+
+    Extractor -->|imports| State
+
+    Enhancer -->|imports| LLMFactory
+    Enhancer -->|imports| State
+
+    PDFGen -->|imports| State
+```
+
+
 ## Quickstart
 
 ### 1. Clone & install dependencies
