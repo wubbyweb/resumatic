@@ -15,6 +15,7 @@ Environment variables (set in .env):
   OPENROUTER_API_KEY          — Your OpenRouter API key (required)
   ORCHESTRATOR_MODEL          — Model slug for Agent 1 (Orchestrator)
   ENHANCER_MODEL              — Model slug for Agent 3 (Enhancer)
+  CRITIC_MODEL                — Model slug for the Enhancement Critic (fast/cheap recommended)
   OPENROUTER_SITE_URL         — Optional: your site URL (sent as HTTP-Referer)
   OPENROUTER_SITE_NAME        — Optional: your app name (sent as X-Title)
 
@@ -31,6 +32,7 @@ OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
 # Default model fallbacks (used when env vars are not set)
 DEFAULT_ORCHESTRATOR_MODEL = "meta-llama/llama-3.1-8b-instruct:free"
 DEFAULT_ENHANCER_MODEL     = "anthropic/claude-3.5-haiku"
+DEFAULT_CRITIC_MODEL       = "meta-llama/llama-3.1-8b-instruct:free"  # Fast/cheap — critic output is short
 
 
 def get_llm(agent: str, temperature: float = 0.0) -> ChatOpenAI:
@@ -85,10 +87,12 @@ def _resolve_model(agent: str) -> str:
     Env var mapping:
       orchestrator → ORCHESTRATOR_MODEL
       enhancer     → ENHANCER_MODEL
+      critic       → CRITIC_MODEL
     """
     env_map = {
         "orchestrator": ("ORCHESTRATOR_MODEL", DEFAULT_ORCHESTRATOR_MODEL),
         "enhancer":     ("ENHANCER_MODEL",     DEFAULT_ENHANCER_MODEL),
+        "critic":       ("CRITIC_MODEL",        DEFAULT_CRITIC_MODEL),
     }
 
     if agent not in env_map:

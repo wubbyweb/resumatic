@@ -109,6 +109,13 @@ Your task is to produce an enhanced version of the resume JSON that:
        - The output JSON must have the same structure as the input JSON.
        - The number of items in the "experience" array MUST equal the input count.
 
+  6. COMPANY NAME RULE (most critical — checked by an automated validator):
+       The "company" field for every experience entry MUST be copied VERBATIM from
+       the input JSON. Do NOT describe, paraphrase, or replace the company name with
+       a description of the organisation (e.g. "Global technology firm"). Copy the
+       exact string character-for-character. If the input says "company": "Acme Corp",
+       your output MUST say "company": "Acme Corp" — unchanged.
+
 Return ONLY the enhanced resume as a structured JSON object matching the schema."""
 
 
@@ -145,7 +152,13 @@ def _enhancer_node(state: ResumaticState) -> dict:
       2. Raw LLM call + JSON fence stripping + Pydantic validation — fallback
          for models that wrap JSON in markdown code fences.
     """
-    print("[Enhancer] Starting content enhancement...")
+    iteration = state.get("enhance_iteration", 0)
+    critique  = state.get("enhance_critique")
+
+    if iteration > 0:
+        print(f"[Enhancer] Retry #{iteration} — applying critic feedback...")
+    else:
+        print("[Enhancer] Starting content enhancement...")
 
     extracted_resume = state.get("extracted_resume")
     job_description = state.get("job_description", "")
@@ -156,14 +169,24 @@ def _enhancer_node(state: ResumaticState) -> dict:
     try:
         llm = _get_llm()
 
+        # Build the human message — append critic feedback block when retrying
+        human_content = (
+            f"## Candidate's Current Resume (JSON)\n\n"
+            f"```json\n{json.dumps(extracted_resume, indent=2)}\n```\n\n"
+            f"## Target Job Description\n\n{job_description}\n\n"
+        )
+
+        if critique:
+            human_content += (
+                f"## FEEDBACK FROM PREVIOUS ATTEMPT (fix these issues)\n\n"
+                f"{critique}\n\n"
+            )
+
+        human_content += "Return ONLY valid JSON — no markdown fences, no explanation."
+
         messages = [
             SystemMessage(content=ENHANCER_SYSTEM_PROMPT),
-            HumanMessage(content=(
-                f"## Candidate's Current Resume (JSON)\n\n"
-                f"```json\n{json.dumps(extracted_resume, indent=2)}\n```\n\n"
-                f"## Target Job Description\n\n{job_description}\n\n"
-                f"Return ONLY valid JSON — no markdown fences, no explanation."
-            )),
+            HumanMessage(content=human_content),
         ]
 
         # --- Strategy 1: with_structured_output ---

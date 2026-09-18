@@ -71,4 +71,10 @@ class ResumaticState(TypedDict):
     # --- Orchestration ---
     messages: list             # Message history for the Orchestrator LLM
     current_step: str          # Workflow cursor: "extract" → "enhance" → "generate" → "done"
-    error: str | None       # Set by any agent on failure; Orchestrator checks this
+    error: str | None          # Set by any agent on failure; Orchestrator checks this
+
+    # --- Enhancer loop (critic feedback cycle) ---
+    enhance_iteration: int          # How many times the Enhancer has run (starts at 0)
+    max_enhance_iterations: int     # Hard cap on retries; set to 3 by the Orchestrator
+    enhance_critique: str | None    # Written feedback from the Critic injected into the next
+                                    # Enhancer call. None = critic passed; non-empty = failed.

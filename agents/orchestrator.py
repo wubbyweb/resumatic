@@ -86,12 +86,18 @@ def _orchestrator_node(state: ResumaticState) -> dict:
                 "error": "Job description is empty. Please provide a job description.",
                 "messages": state.get("messages", []),
             }
-        # First entry — kick off extraction
+        # First entry — kick off extraction and seed the enhancer loop fields
         next_step = "extract"
         status_msg = "Inputs validated. Starting resume extraction."
+        extra_state = {
+            "enhance_iteration": 0,
+            "max_enhance_iterations": 3,
+            "enhance_critique": None,
+        }
 
     else:
         current = state["current_step"]
+        extra_state = {}  # No extra fields to seed on subsequent calls
 
         # --- Error guard: if a worker set an error, stop the pipeline ---
         if state.get("error"):
@@ -132,6 +138,7 @@ def _orchestrator_node(state: ResumaticState) -> dict:
     return {
         "current_step": next_step,
         "messages": updated_messages,
+        **extra_state,
     }
 
 

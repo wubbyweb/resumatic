@@ -8,43 +8,55 @@ Upload your existing resume (PDF or DOCX) and a target job description — the A
 
 ## Architecture
 
-```
-Web Frontend (drag-and-drop UI)
-     │
-     │  POST /tailor-resume
-     │  multipart/form-data
-     ▼
-┌─────────────────────────────────────────┐
-│           FastAPI REST API              │
-│                                         │
-│  ┌──────────────────────────────────┐   │
-│  │    LangGraph StateGraph          │   │
-│  │                                  │   │
-│  │  Agent 1: Orchestrator (LLM) ◄─┐│   │
-│  │      │ extract                  ││   │
-│  │      ▼                          ││   │
-│  │  Agent 2: Extractor (no LLM)   ─┘│   │
-│  │      │ enhance                  ││   │
-│  │      ▼                    ◄─────┘│   │
-│  │  Agent 3: Enhancer (LLM)  ──────►│   │
-│  │      │ generate                  │   │
-│  │      ▼                           │   │
-│  │  Agent 4: PDF Generator (no LLM) │   │
-│  └──────────────────────────────────┘   │
-└─────────────────────────────────────────┘
-     │
-     │  Response: application/pdf
-     ▼
-tailored_resume.pdf
+Resumatic uses a **Supervisor-Worker** multi-agent pattern built on LangGraph, with a
+**feedback loop** on the Enhancer stage. The Enhancement Critic validates each output
+and loops back with written corrections — up to 3 times — before advancing to PDF generation.
+
+```mermaid
+flowchart TD
+    UI["🌐 Web Frontend\ndrag-and-drop UI"]
+    API["⚡ FastAPI REST API\nPOST /tailor-resume"]
+    A1["🧠 Agent 1: Orchestrator\nLLM — validates inputs, routes steps"]
+    A2["📄 Agent 2: Extractor\nno LLM — regex PDF/DOCX parser"]
+    A3["✍️ Agent 3: Enhancer\nLLM — rewrites resume for the job"]
+    CRITIC["🔍 Enhancement Critic\nLLM — validates company names,\nkeyword alignment & bullet quality"]
+    A4["🖨️ Agent 4: PDF Generator\nno LLM — renders final PDF"]
+    OUT["📎 tailored_resume.pdf"]
+
+    UI -->|"multipart/form-data"| API
+    API --> A1
+    A1 -->|"extract"| A2
+    A2 -->|"done"| A1
+    A1 -->|"enhance"| A3
+    A3 --> CRITIC
+    CRITIC -->|"PASS ✅\nor retries exhausted"| A1
+    CRITIC -->|"FAIL ❌\niteration < 3"| A3
+    A1 -->|"generate"| A4
+    A4 -->|"done"| A1
+    A1 -->|"done"| OUT
+    API -->|"application/pdf"| UI
 ```
 
-### The Four Agents
+### The Enhancer Feedback Loop
+
+The **Enhancement Critic** sits between the Enhancer and the Orchestrator and runs two layers of checks:
+
+| Check | Method | What it catches |
+|---|---|---|
+| **Company name integrity** | Pure Python (no LLM cost) | Company names replaced with role descriptions instead of exact names |
+| **Experience entry count** | Pure Python (no LLM cost) | Jobs dropped or merged by the Enhancer |
+| **Keyword alignment & bullet quality** | LLM (`CRITIC_MODEL`) | Weak bullets, missing job-description keywords |
+
+If the critic fails, it writes specific feedback back into the Enhancer's prompt for the retry. After **3 iterations** the best available output is forwarded regardless.
+
+### The Five Agents
 
 | Agent | Role | Uses LLM? |
 |---|---|---|
 | **Agent 1 — Orchestrator** | Supervisor — validates inputs, routes between workers, handles errors | ✅ Yes |
 | **Agent 2 — Extractor** | Parses PDF/DOCX resume into structured data (regex + heuristics) | ❌ No |
 | **Agent 3 — Enhancer** | Rewrites resume content to match the job description | ✅ Yes |
+| **Enhancement Critic** | Validates Enhancer output; loops back with written critique on failure | ✅ Yes (cheap model) |
 | **Agent 4 — PDF Generator** | Renders the enhanced content as a clean PDF | ❌ No |
 
 ---
@@ -55,40 +67,53 @@ This diagram illustrates the dependencies between all `.py` files in the Resumat
 
 ```mermaid
 graph TD
-    %% Define nodes with links to files
+    %% Define nodes
     Main["main.py"]
     Graph["graph.py"]
     State["state.py"]
     LLMFactory["llm_factory.py"]
-    
+    AuditLogger["audit_logger.py"]
+
     subgraph Agents Module
         AgentsInit["agents/__init__.py"]
         Orchestrator["agents/orchestrator.py"]
         Extractor["agents/extractor.py"]
         Enhancer["agents/enhancer.py"]
+        Critic["agents/critic.py"]
         PDFGen["agents/pdf_generator.py"]
     end
 
-    %% Define relationships based on imports
-    Main -->|imports| Graph
-    
-    Graph -->|imports| AgentsInit
-    Graph -->|imports| State
-    
-    AgentsInit -->|imports| Orchestrator
-    AgentsInit -->|imports| Extractor
-    AgentsInit -->|imports| Enhancer
-    AgentsInit -->|imports| PDFGen
+    %% Top-level wiring
+    Main --> Graph
 
-    Orchestrator -->|imports| LLMFactory
-    Orchestrator -->|imports| State
+    Graph --> AgentsInit
+    Graph --> State
 
-    Extractor -->|imports| State
+    %% __init__ re-exports all agent nodes
+    AgentsInit --> Orchestrator
+    AgentsInit --> Extractor
+    AgentsInit --> Enhancer
+    AgentsInit --> Critic
+    AgentsInit --> PDFGen
 
-    Enhancer -->|imports| LLMFactory
-    Enhancer -->|imports| State
+    %% Per-agent dependencies
+    Orchestrator --> LLMFactory
+    Orchestrator --> State
+    Orchestrator --> AuditLogger
 
-    PDFGen -->|imports| State
+    Extractor --> State
+    Extractor --> AuditLogger
+
+    Enhancer --> LLMFactory
+    Enhancer --> State
+    Enhancer --> AuditLogger
+
+    Critic --> LLMFactory
+    Critic --> State
+    Critic --> AuditLogger
+
+    PDFGen --> State
+    PDFGen --> AuditLogger
 ```
 
 
@@ -108,12 +133,10 @@ pip install -r requirements.txt
 
 ```bash
 cp .env.example .env
-# Edit .env and add your API key:
-#   OPENAI_API_KEY=sk-...
-#   MODEL_NAME=gpt-4o-mini
-# Or for Google Gemini:
-#   GOOGLE_API_KEY=AIza...
-#   MODEL_NAME=gemini-2.0-flash
+# Edit .env and set your OpenRouter API key (https://openrouter.ai/keys):
+#   OPENROUTER_API_KEY=sk-or-v1-...
+# Optionally choose models per agent (defaults work out of the box):
+#   ENHANCER_MODEL=anthropic/claude-3.5-sonnet
 ```
 
 ### 3. Start Frontend & Backend
@@ -245,8 +268,10 @@ curl http://localhost:8000/health
 resumatic/
 ├── start.sh              # Startup script for frontend and backend
 ├── main.py               # FastAPI app — endpoints, CORS, static frontend mount
-├── graph.py              # LangGraph StateGraph wiring
+├── graph.py              # LangGraph StateGraph wiring (incl. critic loop)
 ├── state.py              # Shared state schema (ResumaticState TypedDict)
+├── llm_factory.py        # Shared LLM factory — OpenRouter API, per-agent model config
+├── audit_logger.py       # Structured audit logging for every agent input/output
 ├── frontend/             # Dedicated isolated frontend directory
 │   ├── index.html        # Single-page web interface (semantic HTML)
 │   ├── css/
@@ -258,7 +283,9 @@ resumatic/
 │   ├── orchestrator.py   # Agent 1: Supervisor (LLM)
 │   ├── extractor.py      # Agent 2: Resume parser (no LLM)
 │   ├── enhancer.py       # Agent 3: Content tailor (LLM)
+│   ├── critic.py         # Enhancement Critic: quality gate with feedback loop (LLM)
 │   └── pdf_generator.py  # Agent 4: PDF builder (no LLM)
+├── audit/                # Per-run structured logs (gitignored)
 ├── sample/
 │   └── sample_jd.txt     # Sample job description for testing
 ├── output/               # Generated PDFs (gitignored)
@@ -272,19 +299,23 @@ resumatic/
 
 ## LLM Provider
 
-The system supports **OpenAI** (default) or **Google Gemini**.
-
-Set in `.env`:
+All LLM calls route through **[OpenRouter](https://openrouter.ai)**, which provides a
+unified OpenAI-compatible API for hundreds of models. Set your key and per-agent models
+in `.env`:
 
 ```bash
-# OpenAI (default)
-OPENAI_API_KEY=sk-...
-MODEL_NAME=gpt-4o-mini
+# Required
+OPENROUTER_API_KEY=sk-or-v1-...
 
-# OR Google Gemini
-GOOGLE_API_KEY=AIza...
-MODEL_NAME=gemini-2.0-flash
+# Per-agent model selection (see https://openrouter.ai/models for all slugs)
+ORCHESTRATOR_MODEL=meta-llama/llama-3.1-8b-instruct:free   # Fast/free — only writes short status lines
+ENHANCER_MODEL=anthropic/claude-3.5-haiku                   # High-quality writing model
+CRITIC_MODEL=meta-llama/llama-3.1-8b-instruct:free          # Fast/cheap — critic output is short
 ```
+
+> **Tip:** Use a high-quality model (e.g. `anthropic/claude-3.5-sonnet` or `openai/gpt-4o`)
+> for `ENHANCER_MODEL` and a cheap/fast model for `CRITIC_MODEL` and `ORCHESTRATOR_MODEL`
+> to get the best quality-to-cost ratio.
 
 ---
 
@@ -292,9 +323,11 @@ MODEL_NAME=gemini-2.0-flash
 
 | Concept | Where |
 |---|---|
-| Supervisor Pattern | `orchestrator.py` — delegates to workers |
-| Shared State | `state.py` — single `ResumaticState` TypedDict |
-| Heterogeneous Agents | Agents 1 & 3 use LLM; Agents 2 & 4 do not |
-| Conditional Routing | `graph.py` — `add_conditional_edges()` |
+| Supervisor Pattern | `orchestrator.py` — delegates to workers, advances pipeline steps |
+| Shared State | `state.py` — single `ResumaticState` TypedDict passed across all nodes |
+| Heterogeneous Agents | Agents 1, 3 & Critic use LLM; Agents 2 & 4 do not |
+| Conditional Routing | `graph.py` — `add_conditional_edges()` for both orchestrator and critic |
+| **Loop Engineering** | `graph.py` — Enhancer ↔ Critic feedback loop, max 3 iterations |
+| **Critic Pattern** | `critic.py` — validates output, injects written feedback for retry |
 | Structured Output | `enhancer.py` — `llm.with_structured_output()` |
 | API-First Design | `main.py` — FastAPI decouples backend from frontend |
