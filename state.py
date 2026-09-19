@@ -60,7 +60,7 @@ class ResumaticState(TypedDict):
     job_description: str       # Raw job description text submitted by the user
 
     # --- Agent 2 output ---
-    extracted_resume: ResumeData | None   # Structured data parsed from the resume
+    extracted_resume: str | None   # Raw text parsed from the resume
 
     # --- Agent 3 output ---
     enhanced_resume: ResumeData | None    # Tailored resume content

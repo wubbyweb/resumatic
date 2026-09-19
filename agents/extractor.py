@@ -360,53 +360,18 @@ def _extractor_node(state: ResumaticState) -> dict:
     """
     Agent 2 — Resume Extractor node.
 
-    Reads the resume file from state, extracts raw text, splits it into
-    sections, and parses each section into the ResumeData schema.
+    Reads the resume file from state, extracts raw text, and returns it.
+    The Enhancer will be responsible for parsing attributes.
     Writes the result to state["extracted_resume"].
     """
     file_path = state["resume_file_path"]
-    print(f"[Extractor] Parsing resume: {file_path}")
+    print(f"[Extractor] Extracting raw text from: {file_path}")
 
     try:
-        # Step 1: Extract raw text
         raw_text = _extract_raw_text(file_path)
 
-        # Step 2: Split into sections
-        sections = _split_into_sections(raw_text)
-        header_text = sections.get("header", raw_text[:500])
-
-        # Step 3: Extract contact info from the header block
-        all_lines = raw_text.split("\n")
-        name = _extract_name(all_lines)
-        email = _extract_email(header_text)
-        phone = _extract_phone(header_text)
-        linkedin = _extract_linkedin(raw_text)
-
-        # Step 4: Parse each section
-        summary = sections.get("summary", "").strip()
-        skills = _parse_skills(sections.get("skills", ""))
-        experience = _parse_experience(sections.get("experience", ""))
-        education = _parse_education(sections.get("education", ""))
-        certifications = _parse_certifications(sections.get("certifications", ""))
-        projects = _parse_projects(sections.get("projects", ""))
-
-        extracted_resume = {
-            "name": name,
-            "email": email,
-            "phone": phone,
-            "linkedin": linkedin,
-            "summary": summary,
-            "skills": skills,
-            "experience": experience,
-            "education": education,
-            "certifications": certifications,
-            "projects": projects,
-        }
-
-        print(f"[Extractor] Extraction complete. Found {len(experience)} experience entries, "
-              f"{len(skills)} skills, {len(education)} education entries.")
-
-        return {"extracted_resume": extracted_resume}
+        print(f"[Extractor] Extraction complete. Length: {len(raw_text)} chars.")
+        return {"extracted_resume": raw_text}
 
     except Exception as exc:
         print(f"[Extractor] ERROR: {exc}")

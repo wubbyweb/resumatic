@@ -178,32 +178,15 @@ def _enhancement_critic_node(state: ResumaticState) -> dict:
     """
     iteration     = state.get("enhance_iteration", 0)
     max_iter      = state.get("max_enhance_iterations", 3)
-    extracted     = (state.get("extracted_resume") or {}).get("experience", [])
     enhanced_full = state.get("enhanced_resume") or {}
-    enhanced_exp  = enhanced_full.get("experience", [])
     job_desc      = state.get("job_description", "")
 
     print(f"[Critic] Running quality check (attempt {iteration + 1}/{max_iter})...")
 
-    # --- 1. Hard check: entry count ---
-    count_critique = _check_entry_count(extracted, enhanced_exp)
-    if count_critique:
-        print("[Critic] FAIL (entry count mismatch) -- will retry.")
-        return {
-            "enhance_critique": count_critique,
-            "enhance_iteration": iteration + 1,
-        }
+    # The hard checks (company names, entry count) cannot be run because we no longer have a parsed JSON for extracted_resume.
+    # So we skip directly to the soft LLM check.
 
-    # --- 2. Hard check: company names ---
-    company_critique = _check_company_names(extracted, enhanced_exp)
-    if company_critique:
-        print("[Critic] FAIL (company name mismatch) -- will retry.")
-        return {
-            "enhance_critique": company_critique,
-            "enhance_iteration": iteration + 1,
-        }
-
-    # --- 3. Soft check: LLM keyword + bullet quality ---
+    # --- Soft check: LLM keyword + bullet quality ---
     try:
         passed, llm_critique = _llm_quality_check(enhanced_full, job_desc)
     except Exception as exc:

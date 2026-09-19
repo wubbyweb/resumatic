@@ -74,21 +74,19 @@ class ResumeDataModel(BaseModel):
 ENHANCER_SYSTEM_PROMPT = """You are an expert resume writer and career coach.
 
 You will receive:
-  1. A candidate's existing resume content (as a JSON object).
+  1. A candidate's raw resume text extracted from a document.
   2. A target job description.
 
-Your task is to produce an enhanced version of the resume JSON that:
+Your task is to parse the raw resume text into a structured JSON format and produce an enhanced version that:
 
-  1. SUMMARY — Rewrite the professional summary to directly address the target role,
-     highlighting the most relevant experience and skills. Keep it to 3–4 sentences.
+  1. EXTRACT AND ENHANCE SUMMARY — Extract the professional summary and rewrite it to directly address the target role,
+     highlighting the most relevant experience and skills. Keep it to 3–4 sentences. If there is no summary, create one based on their experience.
 
-  2. EXPERIENCE COMPLETENESS — The input JSON contains an "experience" array with one
-     or more job entries. You MUST include EVERY job entry from the input in your output.
-     Do NOT drop, merge, or omit any job. If the input has 3 jobs, your output MUST
-     have exactly 3 jobs, in the same order, with the same titles, companies, and dates.
+  2. EXPERIENCE COMPLETENESS — Identify EVERY job entry from the raw text. You MUST include EVERY job entry in your output.
+     Do NOT drop, merge, or omit any job.
 
-  3. EXPERIENCE BULLETS — For EACH job entry (not just the most recent one), rewrite
-     and enhance the bullet points to:
+  3. EXPERIENCE BULLETS — For EACH job entry (not just the most recent one), extract the existing bullet points, rewrite
+     and enhance them to:
        - Lead with strong action verbs.
        - Emphasise achievements that are most relevant to the job description.
        - Naturally incorporate keywords and technologies from the job description
@@ -97,24 +95,21 @@ Your task is to produce an enhanced version of the resume JSON that:
        - If a job entry has no bullets in the input, generate 2–3 relevant bullets
          based on the job title and company context.
 
-  4. SKILLS — Reorder the skills list so that skills mentioned in the job description
+  4. SKILLS — Extract all skills and reorder the skills list so that skills mentioned in the job description
      appear first. Do not add new skills that don't exist in the original resume.
 
   5. PRESERVATION RULES (strictly enforced):
        - NEVER fabricate experience, job titles, companies, dates, degrees, or certifications.
        - NEVER add skills the candidate did not already have.
-       - NEVER drop or remove any job from the experience array — keep ALL of them.
+       - NEVER drop or remove any job from the experience section — keep ALL of them.
        - NEVER merge multiple jobs into one entry.
        - Keep all factual information (names, dates, companies, institutions) exactly as given.
-       - The output JSON must have the same structure as the input JSON.
-       - The number of items in the "experience" array MUST equal the input count.
 
   6. COMPANY NAME RULE (most critical — checked by an automated validator):
-       The "company" field for every experience entry MUST be copied VERBATIM from
-       the input JSON. Do NOT describe, paraphrase, or replace the company name with
-       a description of the organisation (e.g. "Global technology firm"). Copy the
-       exact string character-for-character. If the input says "company": "Acme Corp",
-       your output MUST say "company": "Acme Corp" — unchanged.
+       The "company" field for every experience entry MUST be extracted precisely from the raw text without alterations.
+       Do NOT describe, paraphrase, or replace the company name with a description of the organisation.
+
+  7. OTHER SECTIONS — Accurately extract the candidate's name, contact information, education, certifications, and projects from the raw text into their respective JSON fields.
 
 Return ONLY the enhanced resume as a structured JSON object matching the schema."""
 
@@ -171,8 +166,8 @@ def _enhancer_node(state: ResumaticState) -> dict:
 
         # Build the human message — append critic feedback block when retrying
         human_content = (
-            f"## Candidate's Current Resume (JSON)\n\n"
-            f"```json\n{json.dumps(extracted_resume, indent=2)}\n```\n\n"
+            f"## Candidate's Raw Resume Text\n\n"
+            f"```text\n{extracted_resume}\n```\n\n"
             f"## Target Job Description\n\n{job_description}\n\n"
         )
 

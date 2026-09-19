@@ -1,0 +1,10 @@
+.git
+.gitignore
+.venv
+__pycache__
+.ruff_cache
+*.pyc
+.env
+.DS_Store
+uploads/
+output/
